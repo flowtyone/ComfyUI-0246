@@ -1017,63 +1017,63 @@ if comfy_graph is not None:
 ######################################## API ########################################
 #####################################################################################
 
-@server.PromptServer.instance.routes.post('/0246-parse-highway')
-async def parse_highway_handler(request):
-	data = await request.json()
-
-	# Validate json
-	if data.get("input") is None:
-		return aiohttp.web.json_response({
-			"error": ["No input provided"]
-		})
-
-	# Parse the input string
-	expr_res, order, errors = lib0246.parse_query(data["input"], lib0246.HIGHWAY_OPS)
-
-	lib0246.highway_check(expr_res, errors)
-
-	# Return a JSON response with the processed data
-	return aiohttp.web.json_response({
-		"expr": expr_res,
-		"order": order,
-		"error": errors
-	})
-
-@server.PromptServer.instance.routes.post('/0246-parse-prompt')
-async def parse_prompt_handler(request):
-	data = await request.json()
-
-	# Validate json
-	if data.get("prompt") is None:
-		return aiohttp.web.json_response({
-			"error": ["No prompt provided"]
-		})
-	
-	return aiohttp.web.json_response({
-		"res": CloudData.text_to_dict(data["prompt"])
-	})
-
-@server.PromptServer.instance.routes.post('/0246-clear')
-async def clear_handler(request):
-	global BASE_EXECUTOR
-	if hasattr(BASE_EXECUTOR, "outputs"):
-		BASE_EXECUTOR.outputs.clear()
-		BASE_EXECUTOR.outputs_ui.clear()
-		BASE_EXECUTOR.object_storage.clear()
-	BASE_EXECUTOR.server.last_prompt_id = None
-	RandomInt.RANDOM_DB.clear()
-	Hold.HOLD_DB.clear()
-	Loop.LOOP_DB.clear()
-	
-	return aiohttp.web.json_response({})
-
-@server.PromptServer.instance.routes.post('/0246-terminate')
-async def terminate_handler(request):
-	# This requires modifying source code of ComfyUI, which is required
-	# For personal purpose only
-	setattr(server.PromptServer.instance, "terminate", True)
-	
-	return aiohttp.web.json_response({})
+# @server.PromptServer.instance.routes.post('/0246-parse-highway')
+# async def parse_highway_handler(request):
+# 	data = await request.json()
+#
+# 	# Validate json
+# 	if data.get("input") is None:
+# 		return aiohttp.web.json_response({
+# 			"error": ["No input provided"]
+# 		})
+#
+# 	# Parse the input string
+# 	expr_res, order, errors = lib0246.parse_query(data["input"], lib0246.HIGHWAY_OPS)
+#
+# 	lib0246.highway_check(expr_res, errors)
+#
+# 	# Return a JSON response with the processed data
+# 	return aiohttp.web.json_response({
+# 		"expr": expr_res,
+# 		"order": order,
+# 		"error": errors
+# 	})
+#
+# @server.PromptServer.instance.routes.post('/0246-parse-prompt')
+# async def parse_prompt_handler(request):
+# 	data = await request.json()
+#
+# 	# Validate json
+# 	if data.get("prompt") is None:
+# 		return aiohttp.web.json_response({
+# 			"error": ["No prompt provided"]
+# 		})
+#
+# 	return aiohttp.web.json_response({
+# 		"res": CloudData.text_to_dict(data["prompt"])
+# 	})
+#
+# @server.PromptServer.instance.routes.post('/0246-clear')
+# async def clear_handler(request):
+# 	global BASE_EXECUTOR
+# 	if hasattr(BASE_EXECUTOR, "outputs"):
+# 		BASE_EXECUTOR.outputs.clear()
+# 		BASE_EXECUTOR.outputs_ui.clear()
+# 		BASE_EXECUTOR.object_storage.clear()
+# 	BASE_EXECUTOR.server.last_prompt_id = None
+# 	RandomInt.RANDOM_DB.clear()
+# 	Hold.HOLD_DB.clear()
+# 	Loop.LOOP_DB.clear()
+#
+# 	return aiohttp.web.json_response({})
+#
+# @server.PromptServer.instance.routes.post('/0246-terminate')
+# async def terminate_handler(request):
+# 	# This requires modifying source code of ComfyUI, which is required
+# 	# For personal purpose only
+# 	setattr(server.PromptServer.instance, "terminate", True)
+#
+# 	return aiohttp.web.json_response({})
 
 ######################################################################################
 ######################################## NODE ########################################
